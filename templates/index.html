@@ -2,57 +2,245 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Psychedelic AI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dream Analysis</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
-        body {
-            background-image: url("{{ image_url|safe }}");
-            background-size: cover;
-            background-position: center;
-            font-family: Arial, sans-serif;
-            color: #fff;
+        :root {
+            --neon-purple: #b624ffaa;
+            --neon-blue: #2496ffaa;
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+        }
+
+        * {
             margin: 0;
             padding: 0;
-            min-height: 100vh;
+            box-sizing: border-box;
         }
-        .content {
-            background: rgba(0, 0, 0, 0.5);
-            padding: 20px;
-            margin: 50px auto;
-            max-width: 600px;
-            border-radius: 8px;
+
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
-        form {
-            display: flex;
-            flex-direction: column;
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
-        input[type="text"] {
-            padding: 10px;
-            margin-bottom: 10px;
-            border: none;
-            border-radius: 4px;
-        }
-        input[type="submit"] {
-            padding: 10px;
-            border: none;
-            border-radius: 4px;
-            background: #2196f3;
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: linear-gradient(-45deg, #0f0f0f, #1a1a1a, #2c1f3d, #1f2c3d);
+            background-size: 400% 400%;
+            animation: gradientMove 15s ease infinite;
             color: white;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        header {
+            margin-bottom: 60px;
+            text-align: center;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        h1 {
+            font-size: 4em;
+            font-weight: 600;
+            letter-spacing: -2px;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, var(--neon-purple), var(--neon-blue));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 20px rgba(182, 36, 255, 0.3);
+        }
+
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 150px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            color: white;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 16px;
+            resize: vertical;
+            transition: all 0.3s ease;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--neon-purple);
+            box-shadow: 0 0 20px rgba(182, 36, 255, 0.2);
+        }
+
+        button {
+            width: 100%;
+            padding: 20px;
+            margin-top: 20px;
+            background: linear-gradient(45deg, var(--neon-purple), var(--neon-blue));
+            border: none;
+            border-radius: 15px;
+            color: white;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 18px;
+            font-weight: 500;
             cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 30px rgba(182, 36, 255, 0.3);
+        }
+
+        button:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .results-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .analysis-text {
+            white-space: pre-line;
+            line-height: 1.8;
+        }
+
+        .dream-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 15px;
+            transition: transform 0.3s ease;
+        }
+
+        .dream-image:hover {
+            transform: scale(1.02);
+        }
+
+        /* Glowing effects */
+        .glow {
+            position: relative;
+        }
+
+        .glow::after {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, var(--neon-purple), var(--neon-blue));
+            border-radius: 22px;
+            z-index: -1;
+            filter: blur(15px);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .glow:hover::after {
+            opacity: 0.5;
+        }
+
+        @media (max-width: 768px) {
+            .results-container {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 2.5em;
+            }
+
+            .container {
+                padding: 20px;
+            }
+        }
+
+        /* Loading animation */
+        @keyframes shimmer {
+            0% { background-position: -1000px 0; }
+            100% { background-position: 1000px 0; }
+        }
+
+        .loading {
+            background: linear-gradient(90deg,
+                rgba(255,255,255,0.05),
+                rgba(255,255,255,0.1),
+                rgba(255,255,255,0.05));
+            background-size: 1000px 100%;
+            animation: shimmer 2s infinite linear;
         }
     </style>
 </head>
 <body>
+    <div class="container">
+        <header>
+            <h1>DREAMSCAPE</h1>
+        </header>
 
-    <div class="content">
-        <h1>Psychedelic AI</h1>
-        <form method="post">
-            <input type="text" name="prompt" placeholder="Enter your question" required>
-            <input type="submit" value="Submit">
-        </form>
-        {% if result %}
-            <h2>Response:</h2>
-            <p>{{ result }}</p>
+        <div class="glass-card glow">
+            <form id="analysisForm" method="POST">
+                <textarea
+                    name="dream_text"
+                    placeholder="Share your dream..."
+                    required>{{ dream_text if dream_text else '' }}</textarea>
+                <button type="submit" id="submitBtn">ANALYZE DREAM</button>
+            </form>
+        </div>
+
+        {% if analysis %}
+        <div class="results-container">
+            <div class="glass-card glow">
+                <div class="analysis-text">
+                    {{ analysis }}
+                </div>
+            </div>
+
+            {% if image_url %}
+            <div class="glass-card glow">
+                <img src="{{ image_url }}" alt="Dream visualization" class="dream-image">
+            </div>
+            {% endif %}
+        </div>
         {% endif %}
     </div>
+
+    <script>
+        document.getElementById('analysisForm').addEventListener('submit', function(e) {
+            const submitButton = document.getElementById('submitBtn');
+            submitButton.textContent = 'ANALYZING...';
+            submitButton.disabled = true;
+            submitButton.classList.add('loading');
+        });
+    </script>
 </body>
 </html>
