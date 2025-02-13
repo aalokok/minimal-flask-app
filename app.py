@@ -30,9 +30,9 @@ def get_jungian_analysis(dream_text):
 
         # Generate DALL-E image prompt based on dream
         image_prompt_response = openai.chat.completions.create(
-            model="gpt-4",
+            model="gpt-4o",
             messages=[
-                {"role": "system",
+                {"role": "developer",
                  "content": "Create a surreal, artistic DALL-E prompt based on the dream's key elements. Make it vivid and dreamlike."},
                 {"role": "user", "content": f"Create an artistic image prompt for this dream:\n{dream_text}"}
             ],
